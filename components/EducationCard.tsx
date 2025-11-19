@@ -13,20 +13,26 @@ const educationItems = [
 
 const certificationItems = [
   {
-    title: 'AWS Certified Developer',
+    title: 'AWS - Cloud Foundations - Training Badge',
     place: 'Amazon Web Services',
     period: '2024'
   },
   {
-    title: 'React & Next.js Expert',
-    place: 'Udemy',
+    title: 'Python Essentials 1',
+    place: 'Cisco',
+    period: '2024'
+  },
+  {
+    title: 'Python Essentials 2',
+    place: 'Cisco',
     period: '2023'
   },
   {
     title: 'Full Stack JavaScript',
-    place: 'freeCodeCamp',
-    period: '2023'
+    place: 'Udemy',
+    period: '2020'
   }
+
 ];
 
 export default function EducationCard() {
