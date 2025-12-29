@@ -113,19 +113,20 @@ const projects = [
   },
   {
     title: 'Juego Impostor',
-    description: 'Juego multijugador estilo Among Us desarrollado en Kotlin con mecánicas de engaño, votaciones y tareas para Android',
+    description: 'Juego multijugador presencial donde los jugadores descubren roles secretos y deben identificar al impostor mediante palabras relacionadas',
     icon: FaGamepad,
     gradient: 'from-red-500 via-pink-600 to-rose-600',
     image: '/projects/impostor-game.jpg',
     video: '/projects/impostor-game.webm',
-    longDescription: 'Juego multijugador en tiempo real inspirado en Among Us, desarrollado completamente en Kotlin para Android. Los jugadores deben completar tareas mientras los impostores intentan eliminarlos sin ser descubiertos. Incluye sistema de votación, chat y mecánicas de engaño avanzadas.',
+    longDescription: 'Juego de mesa digital desarrollado en Kotlin para Android. Se juega con todas las personas en el mismo lugar físico. Cada jugador ingresa a la app y cuando inicia la partida, las cartas se revelan una por una de forma secreta (tocando la pantalla), mostrando si eres impostor o el personaje asignado. Una vez todos conocen sus roles, comienza la ronda donde cada jugador dice una palabra relacionada con el personaje. El impostor debe pasar desapercibido. Luego todos votan por quien creen que es el impostor. Si obtiene mayoría, es eliminado y ganan los jugadores. El impostor gana si logra quedar solo con un jugador.',
     features: [
-      'Multijugador en tiempo real para hasta 10 jugadores',
-      'Sistema de tareas interactivas',
-      'Mecánicas de impostor con sabotajes',
-      'Sistema de votación y chat en tiempo real',
-      'Diferentes mapas y modos de juego',
-      'Personalización de personajes',
+      'Sistema de roles secretos con revelación táctil',
+      'Un dispositivo compartido entre todos los jugadores',
+      'Mecánica de palabras relacionadas al personaje',
+      'Sistema de votación por mayoría',
+      'El impostor debe pasar desapercibido',
+      'Ganan los jugadores si eliminan al impostor',
+      'El impostor gana si queda solo con un jugador',
       'Desarrollo nativo en Kotlin para Android'
     ],
     technologies: [

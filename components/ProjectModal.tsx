@@ -148,11 +148,11 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
       >
         {/* Modal */}
         <div
-          className="relative bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/10 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-scaleIn"
+          className="relative bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/10 max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-scaleIn flex"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Content - Ahora aparece primero */}
-          <div className="p-8 bg-gray-900/95">
+          {/* Content - Lado izquierdo */}
+          <div className="flex-1 p-8 bg-gray-900/95 overflow-y-auto">
             {/* Icon y Title en la misma línea */}
             <div className="flex items-start gap-4 mb-6">
               <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center shadow-xl flex-shrink-0`}>
@@ -233,22 +233,19 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             </div>
           </div>
 
-        {/* Video colapsable - Ahora aparece después del contenido */}
-        {project.video && (
-          <div ref={videoRef} className="relative">
-            {/* Video preview colapsado */}
-            <div 
-              className="relative w-full cursor-pointer group overflow-hidden"
-              onClick={handleToggleVideoInModal}
-            >
-              <div className={`transition-all duration-500 ease-in-out ${isVideoExpandedInModal ? 'max-h-[2000px]' : 'max-h-32'} overflow-hidden`}>
+          {/* Media - Lado derecho */}
+          <div className="w-2/5 flex-shrink-0 relative">
+            {/* Video */}
+            {project.video ? (
+              <div className="h-full relative group">
                 <video
                   autoPlay
                   loop
                   muted
                   playsInline
                   preload="auto"
-                  className="w-full h-auto block relative z-10 transition-transform duration-300 group-hover:scale-[1.01]"
+                  className="w-full h-full object-cover cursor-pointer"
+                  onClick={handleOpenFullScreenVideo}
                   onError={(e) => {
                     console.error('Error loading video:', project.video);
                     e.currentTarget.style.display = 'none';
@@ -261,67 +258,44 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                   <source src={project.video.replace('.webm', '.mp4')} type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
-              </div>
-              
-              {/* Indicador minimalista */}
-              <div className="absolute inset-0 flex items-end justify-center pb-6 z-20 pointer-events-none">
-                <div className="bg-black/60 backdrop-blur-md p-3 rounded-full border border-white/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-black/80">
-                  {isVideoExpandedInModal ? (
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+
+                {/* Overlay e indicador de pantalla completa */}
+                <div 
+                  className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                  onClick={handleOpenFullScreenVideo}
+                >
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
-                  ) : (
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Botón para pantalla completa (solo visible cuando está expandido) */}
-            {isVideoExpandedInModal && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenFullScreenVideo();
-                }}
-                className="absolute top-4 right-4 p-2 rounded-lg bg-black/60 backdrop-blur-md border border-white/20 hover:bg-black/80 transition-all duration-300 z-30 text-white group"
-                title="Pantalla completa"
-              >
-                <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-              </button>
+            ) : (
+              /* Imagen */
+              project.image ? (
+                <div className="h-full relative">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1200px) 40vw, 480px"
+                    onError={(e) => {
+                      console.error('Error loading image:', project.image);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+              ) : (
+                /* Fallback con icono si no hay imagen/video */
+                <div className={`h-full bg-gradient-to-br ${project.gradient} opacity-30 flex items-center justify-center`}>
+                  <Icon className="text-9xl text-white/20" />
+                </div>
+              )
             )}
           </div>
-        )}
 
-        {/* Header con imagen (solo si NO hay video) */}
-        {!project.video && (
-        <div className="relative overflow-hidden rounded-t-3xl" style={{ height: '20rem' }}>
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover relative z-10"
-              sizes="(max-width: 1200px) 100vw, 1200px"
-              onError={(e) => {
-                console.error('Error loading image:', project.image);
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          ) : null}
-          
-          {/* Fallback con icono si no hay imagen/video o falla la carga */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30 flex items-center justify-center`}>
-            <Icon className="text-9xl text-white/20" />
-          </div>
-          
-          {/* Gradient overlay adicional */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
-          
           {/* Close button */}
           <button
             onClick={onClose}
@@ -331,20 +305,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             <FaTimes className="text-white text-lg" />
           </button>
         </div>
-        )}
-
-        {/* Close button para cuando hay video */}
-        {project.video && (
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110 hover:rotate-90 z-30"
-            aria-label="Cerrar"
-          >
-            <FaTimes className="text-white text-lg" />
-          </button>
-        )}
       </div>
-    </div>
     </>
   );
 }
