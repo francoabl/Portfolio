@@ -34,7 +34,7 @@ import {
   SiCss3,
   SiJavascript
 } from 'react-icons/si';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import ProjectModal from './ProjectModal';
 
@@ -234,7 +234,26 @@ export default function UnifiedCarousel() {
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
-  const totalPages = Math.ceil(projects.length / 4);
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  
+  // Distancia mínima para considerar un swipe (en px)
+  const minSwipeDistance = 50;
+  
+  // Detectar si es mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  const projectsPerPage = isMobile ? 1 : 4;
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   const goToPage = (pageIndex: number) => {
     if (pageIndex >= 0 && pageIndex < totalPages) {
@@ -271,13 +290,40 @@ export default function UnifiedCarousel() {
     }, 800);
   };
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextPage(); // Swipe izquierda = siguiente página
+    }
+    if (isRightSwipe) {
+      prevPage(); // Swipe derecha = página anterior
+    }
+  };
+
   return (
     <div 
-      className="relative group/carousel h-full flex flex-col bg-transparent backdrop-blur-none rounded-3xl border-0 shadow-none p-4"
+      className="relative group/carousel w-full h-full min-h-[450px] flex flex-col bg-transparent backdrop-blur-none rounded-2xl sm:rounded-3xl border-0 shadow-none p-2 sm:p-4"
       onWheel={handleWheel}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       {/* Carousel wrapper */}
-      <div className="relative flex-1 overflow-hidden rounded-2xl">
+      <div className="relative flex-1 overflow-hidden rounded-xl sm:rounded-2xl" style={{ minHeight: '400px' }}>
         {/* Cada página del carrusel */}
         {Array.from({ length: totalPages }).map((_, pageIndex) => (
           <div
@@ -290,70 +336,72 @@ export default function UnifiedCarousel() {
                 : 'opacity-0 translate-x-full'
             }`}
           >
-            <div className="h-full flex items-center justify-center px-4">
-              <div className="grid grid-cols-2 gap-5 w-full max-w-[860px] auto-rows-fr">
-                {projects.slice(pageIndex * 4, (pageIndex + 1) * 4).map((project, index) => {
+            <div className="h-full flex items-center justify-center px-2 sm:px-4 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 w-full max-w-[860px]" style={{ gridAutoRows: 'minmax(320px, auto)' }}>
+                {projects.slice(pageIndex * projectsPerPage, (pageIndex + 1) * projectsPerPage).map((project, index) => {
                   const Icon = project.icon;
-                  // Patrón diagonal: posición 0,3 = negro; posición 1,2 = blanco
-                  const isBlack = index % 3 === 0;
+                  // Patrón diagonal para desktop: posición 0,3 = negro; posición 1,2 = blanco
+                  // En mobile siempre alterna basado en el índice real del proyecto en el array completo
+                  const projectRealIndex = pageIndex * projectsPerPage + index;
+                  const isBlack = isMobile ? projectRealIndex % 2 === 0 : index % 3 === 0;
                   return (
                     <div
                       key={index}
                       onClick={() => setSelectedProject(project)}
-                      className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer flex flex-col"
+                      className="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer flex flex-col"
                       style={{ 
                         backgroundColor: isBlack ? '#000000' : '#FFFFFF'
                       }}
                     >
                       {/* Image Preview - Más grande */}
-                      <div className="relative w-full h-44 bg-gray-100 overflow-hidden flex-shrink-0">
+                      <div className="relative w-full h-36 sm:h-44 bg-gray-100 overflow-hidden flex-shrink-0">
                         {project.image ? (
                           <Image
                             src={project.image}
                             alt={project.title}
                             fill
                             className="object-cover group-hover:scale-105 transition-all duration-300"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
                             }}
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <Icon className="text-5xl text-gray-300" />
+                            <Icon className="text-4xl sm:text-5xl text-gray-300" />
                           </div>
                         )}
                         <div className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent`}></div>
                         
                         {/* Icon en la esquina superior */}
-                        <div className={`absolute top-3 left-3 flex h-10 w-10 items-center justify-center rounded-xl shadow-lg`} style={{ backgroundColor: isBlack ? '#FFFFFF' : '#000000' }}>
-                          <Icon className="text-lg" style={{ color: isBlack ? '#000000' : '#FFFFFF' }} />
+                        <div className={`absolute top-2 sm:top-3 left-2 sm:left-3 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl shadow-lg`} style={{ backgroundColor: isBlack ? '#FFFFFF' : '#000000' }}>
+                          <Icon className="text-base sm:text-lg" style={{ color: isBlack ? '#000000' : '#FFFFFF' }} />
                         </div>
                       </div>
                       
                       {/* Content */}
-                      <div className="relative flex flex-col flex-1 p-4">
+                      <div className="relative flex flex-col flex-1 p-3 sm:p-4">
                         {/* Title */}
-                        <h3 className="text-base font-semibold leading-tight mb-2" style={{ color: isBlack ? '#FFFFFF' : '#000000' }}>{project.title}</h3>
+                        <h3 className="text-sm sm:text-base font-semibold leading-tight mb-1.5 sm:mb-2" style={{ color: isBlack ? '#FFFFFF' : '#000000' }}>{project.title}</h3>
 
                         {/* Description */}
-                        <p className="text-xs leading-relaxed line-clamp-2 mb-3" style={{ color: isBlack ? '#CCCCCC' : '#666666' }}>
+                        <p className="text-xs leading-relaxed line-clamp-2 mb-2 sm:mb-3" style={{ color: isBlack ? '#CCCCCC' : '#666666' }}>
                           {project.description}
                         </p>
 
                         {/* Technologies - Iconos visibles */}
-                        <div className="flex flex-wrap gap-2 items-center pt-3 mb-3 flex-1 content-start" style={{ borderTop: `1px solid ${isBlack ? '#333333' : '#E5E5E5'}` }}>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 items-center pt-2 sm:pt-3 mb-2 sm:mb-3 flex-1 content-start" style={{ borderTop: `1px solid ${isBlack ? '#333333' : '#E5E5E5'}` }}>
                           {project.technologies.slice(0, 6).map((tech, i) => {
                             const TechIcon = tech.icon;
                             const techColor = techColors[tech.name] || (isBlack ? '#CCCCCC' : '#333333');
                             return (
                               <div
                                 key={i}
-                                className="flex items-center justify-center rounded-lg p-2 transition-all duration-200 hover:scale-110"
+                                className="flex items-center justify-center rounded-md sm:rounded-lg p-1.5 sm:p-2 transition-all duration-200 hover:scale-110"
                                 style={{ backgroundColor: isBlack ? '#FFFFFF' : '#F5F5F5' }}
                                 title={tech.name}
                               >
-                                <TechIcon className="text-base" style={{ color: techColor }} />
+                                <TechIcon className="text-sm sm:text-base" style={{ color: techColor }} />
                               </div>
                             );
                           })}
@@ -364,7 +412,7 @@ export default function UnifiedCarousel() {
 
                         {/* View Button */}
                         <button 
-                          className="flex items-center justify-center gap-2 text-sm font-semibold transition-all duration-300 pointer-events-none mt-auto pt-2"
+                          className="flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold transition-all duration-300 pointer-events-none mt-auto pt-1.5 sm:pt-2"
                           style={{ color: isBlack ? '#FFFFFF' : '#000000' }}
                         >
                           <span>Ver detalles</span>
@@ -381,13 +429,13 @@ export default function UnifiedCarousel() {
       </div>
 
       {/* Indicador de páginas */}
-      <div className="mt-4 flex justify-center gap-2">
+      <div className="mt-3 sm:mt-4 flex justify-center gap-2">
         {Array.from({ length: totalPages }).map((_, i) => (
           <button
             key={i}
             onClick={() => goToPage(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === currentPage ? 'w-8 bg-white/60' : 'w-1.5 bg-white/20'
+              i === currentPage ? 'w-8 bg-black/40 sm:bg-white/60' : 'w-1.5 bg-black/20 sm:bg-white/20'
             }`}
             aria-label={`Ir a página ${i + 1}`}
           ></button>
