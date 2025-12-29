@@ -46,8 +46,8 @@ export default function EducationCard() {
     <>
       <div 
         onClick={() => setIsModalOpen(true)}
-        className="rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 w-full cursor-pointer hover:scale-[1.02]"
-        style={{ backgroundColor: '#000000' }}
+        className="rounded-3xl transition-all duration-300 p-6 w-full cursor-pointer hover:scale-[1.02]"
+        style={{ backgroundColor: '#000000', border: '1px solid rgba(255, 255, 255, 0.1)' }}
       >
         {/* Education Section - Solo preview */}
         <div className="flex items-center gap-2 mb-3">

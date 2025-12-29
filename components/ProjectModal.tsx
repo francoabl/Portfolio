@@ -143,16 +143,16 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
       {/* Modal principal */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       >
         {/* Modal */}
         <div
-          className="relative bg-gray-900/95 backdrop-blur-xl rounded-3xl border border-white/10 max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-scaleIn flex"
+          className="relative bg-black/95 backdrop-blur-xl rounded-3xl border border-white/10 max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-scaleIn flex"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Content - Lado izquierdo */}
-          <div className="flex-1 p-8 bg-gray-900/95 overflow-y-auto">
+          <div className="flex-1 p-8 bg-black/95 overflow-y-auto">
             {/* Icon y Title en la misma línea */}
             <div className="flex items-start gap-4 mb-6">
               <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center shadow-xl flex-shrink-0`}>

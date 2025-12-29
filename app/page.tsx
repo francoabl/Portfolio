@@ -4,26 +4,30 @@ import UnifiedCarousel from "@/components/UnifiedCarousel";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 lg:p-8" style={{ backgroundColor: '#F5F5F7' }}>
-      <div className="max-w-7xl w-full">
+    <main className="h-screen flex items-center justify-center p-3 lg:p-6" style={{ backgroundColor: '#F5F5F7', overflow: 'hidden', WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' }}>
+      <div className="max-w-7xl w-full h-full flex flex-col">
         {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold mb-2 text-center" style={{ 
+        <div className="mb-3 flex-shrink-0">
+          <h2 className="text-2xl font-bold mb-1 text-center" style={{ 
             background: 'linear-gradient(to right, #000000, #333333)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text'
           }}>Mi Trabajo</h2>
-          <p className="text-gray-500 text-sm text-center font-medium">Habilidades y proyectos destacados</p>
+          <p className="text-gray-500 text-xs text-center font-medium">Habilidades y proyectos destacados</p>
         </div>
 
-        {/* Grid con columna lateral y contenido principal */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(260px,320px)_1fr] lg:gap-6">
-          <div className="flex flex-col gap-4">
-            <ProfileCard />
-            <EducationCard />
+        {/* Layout con columna lateral y contenido principal */}
+        <div className="flex flex-col lg:flex-row flex-1" style={{ overflow: 'hidden' }}>
+          <div className="flex flex-col lg:w-80 flex-shrink-0 pr-0 lg:pr-4" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+            <div className="mb-3">
+              <ProfileCard />
+            </div>
+            <div>
+              <EducationCard />
+            </div>
           </div>
-          <div className="h-full">
+          <div className="flex-1 mt-3 lg:mt-0" style={{ overflow: 'hidden' }}>
             <UnifiedCarousel />
           </div>
         </div>

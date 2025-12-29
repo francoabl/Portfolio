@@ -155,53 +155,142 @@ const projects = [
       { name: 'CSS', icon: FaCss3Alt },
       { name: 'JavaScript', icon: FaJs }
     ]
+  },
+  {
+    title: 'Próximo Proyecto',
+    description: '📋 Tarjeta de Ejemplo - Espacio reservado para futuros proyectos',
+    icon: FaDatabase,
+    gradient: 'from-blue-500 via-cyan-500 to-teal-500',
+    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
+    longDescription: 'Esta es una tarjeta de ejemplo que representa el espacio para próximos proyectos que estaré desarrollando.',
+    features: [
+      'Proyecto en planificación',
+      'Próximamente más detalles'
+    ],
+    technologies: [
+      { name: 'Next.js', icon: SiNextdotjs },
+      { name: 'TypeScript', icon: SiTypescript },
+      { name: 'PostgreSQL', icon: SiPostgresql },
+      { name: 'Express', icon: SiExpress }
+    ]
+  },
+  {
+    title: 'Próximo Proyecto',
+    description: '📋 Tarjeta de Ejemplo - Espacio reservado para futuros proyectos',
+    icon: FaAws,
+    gradient: 'from-gray-600 via-gray-700 to-gray-900',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80',
+    longDescription: 'Esta es una tarjeta de ejemplo que representa el espacio para próximos proyectos que estaré desarrollando.',
+    features: [
+      'Proyecto en planificación',
+      'Próximamente más detalles'
+    ],
+    technologies: [
+      { name: 'Node.js', icon: FaNodeJs },
+      { name: 'MongoDB', icon: SiMongodb },
+      { name: 'PostgreSQL', icon: SiPostgresql },
+      { name: 'AWS', icon: FaAws }
+    ]
+  },
+  {
+    title: 'Próximo Proyecto',
+    description: '📋 Tarjeta de Ejemplo - Espacio reservado para futuros proyectos',
+    icon: FaDatabase,
+    gradient: 'from-indigo-500 via-purple-500 to-pink-500',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+    longDescription: 'Esta es una tarjeta de ejemplo que representa el espacio para próximos proyectos que estaré desarrollando.',
+    features: [
+      'Proyecto en planificación',
+      'Próximamente más detalles'
+    ],
+    technologies: [
+      { name: 'React', icon: FaReact },
+      { name: 'TypeScript', icon: SiTypescript },
+      { name: 'Tailwind', icon: SiTailwindcss },
+      { name: 'Node.js', icon: FaNodeJs }
+    ]
+  },
+  {
+    title: 'Próximo Proyecto',
+    description: '📋 Tarjeta de Ejemplo - Espacio reservado para futuros proyectos',
+    icon: FaRobot,
+    gradient: 'from-cyan-500 via-blue-500 to-indigo-600',
+    image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80',
+    longDescription: 'Esta es una tarjeta de ejemplo que representa el espacio para próximos proyectos que estaré desarrollando.',
+    features: [
+      'Proyecto en planificación',
+      'Próximamente más detalles'
+    ],
+    technologies: [
+      { name: 'Python', icon: FaPython },
+      { name: 'OpenAI', icon: SiOpenai },
+      { name: 'React', icon: FaReact },
+      { name: 'MySQL', icon: SiMysql }
+    ]
   }
 ];
 
 export default function UnifiedCarousel() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const totalPages = Math.ceil(projects.length / 4);
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const containerWidth = scrollContainerRef.current.offsetWidth;
-      const newScrollPosition = scrollContainerRef.current.scrollLeft + (direction === 'right' ? containerWidth : -containerWidth);
-      scrollContainerRef.current.scrollTo({
-        left: newScrollPosition,
-        behavior: 'smooth'
-      });
+  const goToPage = (pageIndex: number) => {
+    if (pageIndex >= 0 && pageIndex < totalPages) {
+      setCurrentPage(pageIndex);
     }
   };
 
-  return (
-    <div className="relative group/carousel h-full flex flex-col bg-transparent backdrop-blur-none rounded-3xl border-0 shadow-none p-4">
-      {/* Botones de navegación */}
-      <button
-        onClick={() => scroll('left')}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-white/20 hover:scale-110 -translate-x-6"
-        aria-label="Anterior"
-      >
-        <FaChevronLeft className="text-white text-lg" />
-      </button>
-      
-      <button
-        onClick={() => scroll('right')}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 hover:bg-white/20 hover:scale-110 translate-x-6"
-        aria-label="Siguiente"
-      >
-        <FaChevronRight className="text-white text-lg" />
-      </button>
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
 
-      {/* Contenedor del carrusel */}
-      <div
-        ref={scrollContainerRef}
-        className="overflow-x-auto scrollbar-hide scroll-smooth flex-1 flex items-center"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        <div className="inline-flex gap-6 h-full items-center w-full justify-center">
-          {/* Cada página del carrusel */}
-          {Array.from({ length: Math.ceil(projects.length / 4) }).map((_, pageIndex) => (
-            <div key={pageIndex} className="inline-block h-full">
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (isScrolling) return;
+    
+    e.preventDefault();
+    setIsScrolling(true);
+    
+    // Detectar dirección del scroll
+    if (e.deltaY > 0 || e.deltaX > 0) {
+      // Scroll hacia abajo o derecha = siguiente página
+      nextPage();
+    } else {
+      // Scroll hacia arriba o izquierda = página anterior
+      prevPage();
+    }
+    
+    // Prevenir múltiples scrolls rápidos
+    setTimeout(() => {
+      setIsScrolling(false);
+    }, 800);
+  };
+
+  return (
+    <div 
+      className="relative group/carousel h-full flex flex-col bg-transparent backdrop-blur-none rounded-3xl border-0 shadow-none p-4"
+      onWheel={handleWheel}
+    >
+      {/* Carousel wrapper */}
+      <div className="relative flex-1 overflow-hidden rounded-2xl">
+        {/* Cada página del carrusel */}
+        {Array.from({ length: totalPages }).map((_, pageIndex) => (
+          <div
+            key={pageIndex}
+            className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+              pageIndex === currentPage
+                ? 'opacity-100 translate-x-0'
+                : pageIndex < currentPage
+                ? 'opacity-0 -translate-x-full'
+                : 'opacity-0 translate-x-full'
+            }`}
+          >
+            <div className="h-full flex items-center justify-center px-4">
               <div className="grid grid-cols-2 gap-5 w-full max-w-[860px] auto-rows-fr">
                 {projects.slice(pageIndex * 4, (pageIndex + 1) * 4).map((project, index) => {
                   const Icon = project.icon;
@@ -212,7 +301,9 @@ export default function UnifiedCarousel() {
                       key={index}
                       onClick={() => setSelectedProject(project)}
                       className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer flex flex-col"
-                      style={{ backgroundColor: isBlack ? '#000000' : '#FFFFFF' }}
+                      style={{ 
+                        backgroundColor: isBlack ? '#000000' : '#FFFFFF'
+                      }}
                     >
                       {/* Image Preview - Más grande */}
                       <div className="relative w-full h-44 bg-gray-100 overflow-hidden flex-shrink-0">
@@ -285,19 +376,21 @@ export default function UnifiedCarousel() {
                 })}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       {/* Indicador de páginas */}
-  <div className="mt-4 flex justify-center gap-2">
-        {Array.from({ length: Math.ceil(projects.length / 4) }).map((_, i) => (
-          <div
+      <div className="mt-4 flex justify-center gap-2">
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <button
             key={i}
+            onClick={() => goToPage(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === 0 ? 'w-8 bg-white/60' : 'w-1.5 bg-white/20'
+              i === currentPage ? 'w-8 bg-white/60' : 'w-1.5 bg-white/20'
             }`}
-          ></div>
+            aria-label={`Ir a página ${i + 1}`}
+          ></button>
         ))}
       </div>
 

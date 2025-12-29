@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function ProfileCard() {
   return (
-    <div className="rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 h-full w-full flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="rounded-3xl p-6 h-full w-full flex flex-col" style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(0, 0, 0, 0.05)' }}>
       {/* Avatar & Name */}
       <div className="flex flex-col items-center text-center mb-6">
         <div className="relative mb-3">
@@ -30,17 +30,16 @@ export default function ProfileCard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6">
         {[
-          { label: 'Años', value: '2+', gradient: 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)', icon: FaCalendarAlt },
-          { label: 'Proyectos', value: '12', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', icon: FaRocket },
+          { label: 'Años desarrollando proyectos', value: '+2', gradient: 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)', icon: FaCalendarAlt },
           { label: 'Stack', value: 'Full', gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)', icon: FaCode }
         ].map((item) => {
           const Icon = item.icon;
           return (
             <div 
               key={item.label} 
-              className="rounded-2xl p-3 text-center relative overflow-hidden group hover:scale-105 transition-transform duration-200"
+              className="rounded-2xl p-4 text-center relative overflow-hidden group hover:scale-105 transition-transform duration-200"
               style={{ background: item.gradient }}
             >
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
@@ -58,7 +57,7 @@ export default function ProfileCard() {
       <div className="mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wider mb-2 text-gray-400">Sobre mí</h2>
         <p className="text-sm leading-relaxed text-gray-600">
-          Desarrollador full stack con enfoque en productos innovadores y accesibles. Especializado en crear experiencias únicas.
+          Estudiante de tercer año de Ingeniería Informática especializado en fullstack en DUOC UC, en formación continua, con foco en adquirir experiencia práctica mediante proyectos reales.
         </p>
       </div>
 
