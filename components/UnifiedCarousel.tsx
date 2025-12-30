@@ -83,7 +83,8 @@ const projects = [
       { name: 'React', icon: FaReact },
       { name: 'Node.js', icon: FaNodeJs },
       { name: 'AWS', icon: FaAws }
-    ]
+    ],
+    githubUrl: 'https://github.com/francoabl/HuertoHogar'
   },
   {
     title: 'ChatBot Grozy',
@@ -109,7 +110,8 @@ const projects = [
       { name: 'HTML', icon: FaHtml5 },
       { name: 'CSS', icon: FaCss3Alt },
       { name: 'JavaScript', icon: FaJs }
-    ]
+    ],
+    githubUrl: 'https://github.com/francoabl/GrozyChatBot'
   },
   {
     title: 'Juego Impostor',
@@ -132,7 +134,8 @@ const projects = [
     technologies: [
       { name: 'Kotlin', icon: SiKotlin },
       { name: 'Android', icon: SiAndroid }
-    ]
+    ],
+    githubUrl: 'https://github.com/francoabl/ImpostorAPPV2'
   },
   {
     title: 'FitStart - Tu Primer Paso',
@@ -347,7 +350,13 @@ export default function UnifiedCarousel() {
                   return (
                     <div
                       key={index}
-                      onClick={() => setSelectedProject(project)}
+                      onClick={() => {
+                        if (project.githubUrl) {
+                          window.open(project.githubUrl, '_blank');
+                        } else {
+                          setSelectedProject(project);
+                        }
+                      }}
                       className="group relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer flex flex-col"
                       style={{ 
                         backgroundColor: isBlack ? '#000000' : '#FFFFFF'

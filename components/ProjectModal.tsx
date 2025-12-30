@@ -162,6 +162,65 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               <FaTimes className="text-red-400 text-sm" />
             </button>
 
+            {/* Imagen/Video en móvil y tablet - antes del contenido */}
+            <div className="lg:hidden mb-4 sm:mb-6 -mx-4 sm:-mx-6">
+              {project.video ? (
+                <div className="relative aspect-video bg-black">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Error loading video:', project.video);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  >
+                    <source src={project.video} type="video/webm" />
+                    <source src={project.video.replace('.webm', '.mp4')} type="video/mp4" />
+                  </video>
+                </div>
+              ) : project.image ? (
+                project.githubUrl ? (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative aspect-video bg-gray-900 block cursor-pointer group"
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="100vw"
+                      priority
+                      unoptimized={project.image.startsWith('http')}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30">
+                        <span className="text-white text-sm font-medium">Ver en GitHub</span>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <div className="relative aspect-video bg-gray-900">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="100vw"
+                      priority
+                      unoptimized={project.image.startsWith('http')}
+                    />
+                  </div>
+                )
+              ) : null}
+            </div>
+
             {/* Icon y Title en la misma línea */}
             <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6 pr-10 lg:pr-0">
               <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${project.gradient} flex items-center justify-center shadow-xl flex-shrink-0`}>
@@ -280,19 +339,47 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             ) : (
               /* Imagen */
               project.image ? (
-                <div className="h-full relative">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1200px) 40vw, 480px"
-                    onError={(e) => {
-                      console.error('Error loading image:', project.image);
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
+                project.githubUrl ? (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-full relative block group cursor-pointer"
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 1200px) 40vw, 480px"
+                      priority
+                      unoptimized={project.image.startsWith('http')}
+                      onError={(e) => {
+                        console.error('Error loading image:', project.image);
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/20 backdrop-blur-md px-6 py-3 rounded-full border border-white/30">
+                        <span className="text-white font-medium">Ver en GitHub</span>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <div className="h-full relative">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1200px) 40vw, 480px"
+                      priority
+                      unoptimized={project.image.startsWith('http')}
+                      onError={(e) => {
+                        console.error('Error loading image:', project.image);
+                      }}
+                    />
+                  </div>
+                )
               ) : (
                 /* Fallback con icono si no hay imagen/video */
                 <div className={`h-full bg-gradient-to-br ${project.gradient} opacity-30 flex items-center justify-center`}>
